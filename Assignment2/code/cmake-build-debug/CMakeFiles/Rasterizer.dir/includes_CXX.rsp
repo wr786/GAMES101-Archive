@@ -1,0 +1,1 @@
+-IC:/__libs__/Eigen3/include -isystem C:/__libs__/opencv/sources/build/install/include
