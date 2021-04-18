@@ -1,0 +1,3 @@
+C:/Users/wr786/Documents/GitHub/GAMES101-Archive/pa0/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/wr786/Documents/GitHub/GAMES101-Archive/pa0/cmake-build-debug/CMakeFiles/Transformation.dir
+C:/Users/wr786/Documents/GitHub/GAMES101-Archive/pa0/cmake-build-debug/CMakeFiles/rebuild_cache.dir
