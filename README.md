@@ -1,2 +1,2 @@
-# GAMES101-PArchive
- Archive of the PAs of GAMES101
+# GAMES101-Archive
+ Archive of the Assignments of **GAMES101**
