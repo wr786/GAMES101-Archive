@@ -5,6 +5,7 @@
 #include <opencv2/opencv.hpp>
 
 constexpr double MY_PI = 3.1415926;
+#define DEG2RAD(_deg) (_deg * MY_PI / 180.)
 
 Eigen::Matrix4f get_view_matrix(Eigen::Vector3f eye_pos)
 {
@@ -27,6 +28,12 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle)
     // Create the model matrix for rotating the triangle around the Z axis.
     // Then return it.
 
+    float angle = DEG2RAD(rotation_angle);
+    model << cos(angle),    -sin(angle),    0,  0,
+             sin(angle),     cos(angle),    0,  0,
+                      0,              0,    1,  0,
+                      0,              0,    0,  1;
+
     return model;
 }
 
@@ -40,6 +47,38 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     // TODO: Implement this function
     // Create the projection matrix for the given parameters.
     // Then return it.
+
+    float fov = DEG2RAD(eye_fov);
+    float t = zNear * tan(fov / 2.f);
+    float b = -t;
+    float r = t * aspect_ratio;
+    float l = -r;
+    float n = -zNear;
+    float f = -zFar;
+
+    // 1. Squish the frustum into a cuboid
+    Eigen::Matrix4f M_persp_to_ortho;
+    M_persp_to_ortho << n,  0,    0,     0,
+                        0,  n,    0,     0,
+                        0,  0,  n+f,  -n*f,
+                        0,  0,    1,     0;
+
+    // 2. Shift the cuboid to the Origin
+    Eigen::Matrix4f M_ortho_shift;
+    M_ortho_shift << 1, 0,  0,  -(l+r)/2,
+                     0, 1,  0,  -(t+b)/2,
+                     0, 0,  1,  -(n+f)/2,
+                     0, 0,  0,         1;
+
+    // 3. Scale the cuboid into [-1, 1]^3
+    Eigen::Matrix4f M_ortho_scale;
+    M_ortho_scale << 2/(r-l),         0,        0,  0,
+                           0,   2/(t-b),        0,  0,
+                           0,         0,  2/(n-f),  0,
+                           0,         0,        0,  1;
+
+    // 4. Combine them and get the Projection Matrix
+    projection = M_ortho_scale * M_ortho_shift * M_persp_to_ortho;
 
     return projection;
 }
